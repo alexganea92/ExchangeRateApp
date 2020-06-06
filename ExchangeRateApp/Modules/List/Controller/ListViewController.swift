@@ -33,13 +33,13 @@ class ListViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        controller.update(.start)
+        controller.refresh(.start)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        controller.update(.stop)
+        controller.refresh(.stop)
     }
     
     @IBAction func menuPressed(_ sender: Any) {
@@ -66,7 +66,7 @@ class ListViewController: UIViewController {
         
         viewModel.exchangeData.addObserver { [weak self] (rate) in
             if rate.count > 0 {
-                self?.title = self?.viewModel.getTitle()
+                self?.title = self?.viewModel.title()
                 self?.tableView.reloadData()
             }
         }

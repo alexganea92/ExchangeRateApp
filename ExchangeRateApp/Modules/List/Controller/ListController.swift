@@ -9,30 +9,31 @@
 import Foundation
 import UIKit
 
-class ListController {
-    let exchangeService: ApiService
+class ListController: Updatable {
+    
+    let exchangeService: APIServiceProtocol
     let viewModel: ListViewModel
     var timer: Timer? = nil
     
-    init(viewModel: ListViewModel = ListViewModel(), exchangeService: ApiService = ApiService()) {
+    init(viewModel: ListViewModel = ListViewModel(), exchangeService: APIServiceProtocol = ApiService()) {
         self.exchangeService = exchangeService
         self.viewModel = viewModel
     }
     
-    func update(_ state: Update){
+    func refresh(_ state: Update){
         timer?.invalidate()
         
         if state == .start{
-            refresh()
-            timer = Timer.scheduledTimer(timeInterval: Default.refreshInterval, target: self, selector: #selector(refresh), userInfo: nil, repeats: true)
+            update()
+            timer = Timer.scheduledTimer(timeInterval: Default.refreshInterval, target: self, selector: #selector(update), userInfo: nil, repeats: true)
         }
     }
     
-    @objc func refresh(){
+    @objc func update(){
         viewModel.isLoading.value = true
-        exchangeService.fetchRates(symbols: [], interval: 0){ [weak self] (rates) in
+        exchangeService.fetchRates(symbols: [], interval: 0){ [weak self] (rates, error) in
             self?.viewModel.isLoading.value = false
             self?.viewModel.exchangeData.value = rates
-        }
+        } 
     }
 }

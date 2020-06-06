@@ -28,7 +28,10 @@ class ListViewModel{
         return ExchangeInfoModel.init(data.currencyArray[idxP.row])
     }
     
-    func getTitle() ->String{
+    func title() -> String{
+        guard self.exchangeData.value.count > 0 else {
+            return ""
+        }
         let obj = exchangeData.value[exchangeData.value.count-1]
         return String(obj.base + " " + obj.date)
     }

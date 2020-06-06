@@ -10,8 +10,20 @@ import Foundation
 
 class SettingViewModel{
     let isLoading = Observable<Bool>(value: false)
-    
     var currencyOptions: [CurrencyViewModel] = []
+    
+    lazy var controller: SettingController = {
+          return SettingController()
+      }()
+    
+    lazy var refreshIntervals: [String] = {
+        var options: [String] = []
+        for value in RefreshRate.allCases{
+            let str = String(value.rawValue)
+            options.append(str)
+        }
+        return options
+    }()
     
     func setCurrencyNames(exchangeData: Rate){
         currencyOptions.removeAll()
@@ -22,16 +34,7 @@ class SettingViewModel{
         }
     }
     
-    func getCurrentRefresh()->String{
+    func currentRefreshInterval() -> String{
         return String(Default.refreshInterval)+" sec"
-    }
-    
-    func getRefreshRates()->[String]{
-        var options: [String] = []
-        for value in RefreshRate.allCases{
-            let str = String(value.rawValue)
-            options.append(str)
-        }
-        return options
     }
 }

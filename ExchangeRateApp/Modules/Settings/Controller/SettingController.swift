@@ -8,19 +8,19 @@
 
 import Foundation
 
-class SettingController{
-    let exchangeService: ApiService
+class SettingController: Updatable{
+    let exchangeService: APIServiceProtocol
     let viewModel: SettingViewModel
     
     
-    init(viewModel: SettingViewModel = SettingViewModel(), exchangeService: ApiService = ApiService()) {
+    init(viewModel: SettingViewModel = SettingViewModel(), exchangeService: APIServiceProtocol = ApiService()) {
         self.exchangeService = exchangeService
         self.viewModel = viewModel
     }
     
     func update(){
         viewModel.isLoading.value = true
-        exchangeService.fetchRates(symbols: [], interval: 0){ [weak self] (rates) in
+        exchangeService.fetchRates(symbols: [], interval: 0){ [weak self] (rates, error) in
             self?.viewModel.isLoading.value = false
             if rates.count > 0{
                 self?.viewModel.setCurrencyNames(exchangeData: rates[rates.count-1])

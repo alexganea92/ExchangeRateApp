@@ -9,12 +9,18 @@
 import Foundation
 import Alamofire
 
+protocol APIServiceProtocol {
+    var dataProcess: DataProcess {get set}
+    func fetchRates(symbols: [String], interval: Int, completionBlock: @escaping (_ rates: [Rate], _ error: Error? )->() )
+}
 
-class ApiService{
+
+class ApiService: APIServiceProtocol{
     
     static let base = "https://api.exchangeratesapi.io"
+    var dataProcess: DataProcess = DataProcess()
     
-    func fetchRates(symbols: [String], interval: Int, completionBlock: @escaping (([Rate])->Void)){
+    func fetchRates(symbols: [String], interval: Int, completionBlock: @escaping (_ rates: [Rate], _ error: Error? )->()) {
         var request: String
         
         if interval == 0 {
@@ -29,7 +35,7 @@ class ApiService{
                 if idx == symbols.startIndex {
                     url = url + "&symbols="
                 }
-
+                
                 url = url + element
                 if idx != symbols.endIndex-1 {
                     url = url + ","
@@ -39,9 +45,8 @@ class ApiService{
             request = url
         }
         
-        print(request)
-        
         AF.request(request).response { response in
+            var ratesArray = [Rate]()
             
             switch response.result {
             case let .success(value):
@@ -51,23 +56,16 @@ class ApiService{
                     return
                 }
                 
-                var ratesArray: [Rate] = []
-                
                 if interval < 0 {
-                    let dictionaries = dataDictionary["rates"] as! [String : [String:NSNumber]]
-                    for (key, value) in dictionaries {
-                        let rateObj = Rate.init(date: key , base: "", rates: value)
-                        ratesArray.append(rateObj)
-                    }
+                    ratesArray = self.dataProcess.historyRate(dataDictionary)
                 }else{
-                    let rateObj = Rate.init(date: dataDictionary["date"] as! String, base: dataDictionary["base"] as! String, rates: dataDictionary["rates"] as! [String : NSNumber])
-                    ratesArray.append(rateObj)
+                    ratesArray = self.dataProcess.currentRate(dataDictionary)
                 }
                 
-                completionBlock(ratesArray)
+                completionBlock(ratesArray, nil)
                 
             case let .failure(error):
-                print(error)
+                completionBlock(ratesArray, error)
             }
         }
     }

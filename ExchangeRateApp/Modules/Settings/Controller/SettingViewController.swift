@@ -40,8 +40,9 @@ class SettingViewController: UIViewController {
     func updateCurrency(){
         currencyButton.setTitle(Default.currencyBase, for: .normal)
     }
+    
     func updateRefreshInterval(){
-        refreshButton.setTitle(viewModel.getCurrentRefresh(), for: .normal)
+        refreshButton.setTitle(viewModel.currentRefreshInterval(), for: .normal)
     }
     
     @IBAction func currencyPressed(_ sender: Any) {
@@ -61,7 +62,7 @@ class SettingViewController: UIViewController {
     @IBAction func refreshPressed(_ sender: Any) {
         let controller = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertController.Style.actionSheet)
         
-        for item in viewModel.getRefreshRates() {
+        for item in viewModel.refreshIntervals {
             controller.addAction(UIAlertAction(title: item, style: UIAlertAction.Style.default, handler: { action in
                 Default.refreshInterval = TimeInterval(Int(action.title!)!)
                 self.updateRefreshInterval()

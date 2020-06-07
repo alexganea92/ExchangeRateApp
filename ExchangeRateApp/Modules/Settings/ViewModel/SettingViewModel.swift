@@ -8,9 +8,10 @@
 
 import Foundation
 
-class SettingViewModel{
-    let isLoading = Observable<Bool>(value: false)
-    var currencyOptions: [CurrencyViewModel] = []
+class SettingViewModel: ViewModel{
+    var isLoading = Observable<Bool>(value: false)
+    var exchangeData = Observable<[Rate]>(value: [])
+    var message = Observable<String?>(value: nil)
     
     lazy var controller: SettingController = {
           return SettingController()
@@ -33,13 +34,14 @@ class SettingViewModel{
      - parameters:
         - exchangeData: Rate Object
      */
-    func setCurrencyNames(exchangeData: Rate){
-        currencyOptions.removeAll()
-        
-        for value in exchangeData.currencyArray {
+    func currencyNames() -> [CurrencyViewModel]{
+        var currencyOptions: [CurrencyViewModel] = []
+        let rateObj = exchangeData.value[exchangeData.value.count - 1]
+        for value in rateObj.currencyArray {
             let currency = CurrencyViewModel.init(value)
             currencyOptions.append(currency)
         }
+        return currencyOptions
     }
     
     /**

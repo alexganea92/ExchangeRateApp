@@ -8,10 +8,12 @@
 
 import Foundation
 
-class ListViewModel{
-    let isLoading = Observable<Bool>(value: false)
-    let exchangeData = Observable<[Rate]>(value: [])
+class ListViewModel: ViewModel{
+    var isLoading = Observable<Bool>(value: false)
+    var exchangeData = Observable<[Rate]>(value: [])
+    var message = Observable<String?>(value: nil)
     
+   
     /**
      Gets the section number
      

@@ -9,8 +9,11 @@
 import Foundation
 import Charts
 
-class HistoryViewModel{
-    let exchangeDataArray = Observable<[Rate]>(value: [])
+class HistoryViewModel: ViewModel{
+    var isLoading = Observable<Bool>(value: false)
+    var exchangeData = Observable<[Rate]>(value: [])
+    var message = Observable<String?>(value: nil)
+    
     let roundUp: (LineChartData) -> Double = { (chartData) in
         return chartData.getYMax().rounded(.up)
     }
@@ -24,7 +27,7 @@ class HistoryViewModel{
     func processData() -> LineChartData{
         var dictionaryCurrencies = [String:Array<ChartDataEntry>]()
         
-        for rate in exchangeDataArray.value {
+        for rate in exchangeData.value {
             for currency in rate.currencyArray{
                 
                 var currentHistoryCurrencyArray = dictionaryCurrencies[currency.name] ?? []

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ListViewController: UIViewController {
+class ListViewController: UIViewController, ViewController {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -42,6 +42,12 @@ class ListViewController: UIViewController {
         controller.refresh(.stop)
     }
     
+    func showMessage(_ string: String) {
+        let alert = UIAlertController(title: "Alert", message: string, preferredStyle: .alert)
+        alert.addAction( UIAlertAction(title: "Ok", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
     @IBAction func menuPressed(_ sender: Any) {
         let controller = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertController.Style.actionSheet)
         
@@ -50,9 +56,9 @@ class ListViewController: UIViewController {
             self.navigationController?.pushViewController(vc, animated: true)
         }))
         controller.addAction(UIAlertAction(title: "History Screen", style: UIAlertAction.Style.default, handler: { action in
-                   let vc = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(identifier: "HistoryViewController")
-                   self.navigationController?.pushViewController(vc, animated: true)
-               }))
+            let vc = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(identifier: "HistoryViewController")
+            self.navigationController?.pushViewController(vc, animated: true)
+        }))
         controller.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
         
         present(controller, animated: true, completion: nil)
@@ -68,6 +74,12 @@ class ListViewController: UIViewController {
             if rate.count > 0 {
                 self?.title = self?.viewModel.title()
                 self?.tableView.reloadData()
+            }
+        }
+        
+        viewModel.message.addObserver { [weak self] (message) in
+            if let message = message {
+                self?.showMessage(message)
             }
         }
     }

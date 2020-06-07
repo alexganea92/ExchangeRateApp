@@ -25,9 +25,9 @@ class SettingViewModelTests: XCTestCase {
      }
 
     func test_currencies_options() {
+        sut.exchangeData.value = DataDummy.rateStub
         if let rateStub = DataDummy.rateStub.first{
-            sut.setCurrencyNames(exchangeData: rateStub)
-            XCTAssertTrue(sut.currencyOptions.count == rateStub.currencyArray.count)
+            XCTAssertTrue(sut.currencyNames().count == rateStub.currencyArray.count)
         }
     }
     

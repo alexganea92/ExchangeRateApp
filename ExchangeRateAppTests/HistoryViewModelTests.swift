@@ -29,7 +29,7 @@ class HistoryViewModelTests: XCTestCase {
     
     func test_data() {
         let expect = XCTestExpectation(description: "Rate history")
-        sut.exchangeDataArray.addObserver {(rates) in
+        sut.exchangeData.addObserver {(rates) in
             if rates.count > 0 {
                 expect.fulfill()
             }
@@ -42,7 +42,7 @@ class HistoryViewModelTests: XCTestCase {
         
         let currencies = rates.count
         wait(for: [expect], timeout: 1)
-        XCTAssertTrue(sut.exchangeDataArray.value.count == currencies)
+        XCTAssertTrue(sut.exchangeData.value.count == currencies)
     }
     
     func test_max_y(){
@@ -57,5 +57,19 @@ class HistoryViewModelTests: XCTestCase {
         
         let max = sut.roundUp(chartData)
         XCTAssertTrue(max == Double(number))
+    }
+    
+    func test_error(){
+        let message = "An error occured"
+        let expect = XCTestExpectation(description: "Error test")
+        sut.message.addObserver { (message) in
+            if message != nil {
+                expect.fulfill()
+            }
+        }
+        
+        sut.message.value = message
+        wait(for: [expect], timeout: 1)
+        XCTAssertTrue(sut.message.value == message)
     }
 }

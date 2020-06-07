@@ -22,8 +22,13 @@ class SettingController: Updatable{
         viewModel.isLoading.value = true
         exchangeService.fetchRates(symbols: [], interval: 0){ [weak self] (rates, error) in
             self?.viewModel.isLoading.value = false
-            if rates.count > 0{
-                self?.viewModel.setCurrencyNames(exchangeData: rates[rates.count-1])
+            
+            if let errorMsg = error?.localizedDescription {
+                self?.viewModel.message.value = errorMsg
+            }else{
+                if rates.count > 0{
+                    self?.viewModel.exchangeData.value = rates
+                }
             }
         }
     }

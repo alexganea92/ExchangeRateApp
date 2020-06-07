@@ -20,7 +20,11 @@ class HistoryController: Updatable {
     
     func update(){
         exchangeService.fetchRates(symbols:["RON", "USD", "BGN"], interval: -10){ [weak self] (rates, error) in
-            self?.viewModel.exchangeDataArray.value = rates
+            if let errorMsg = error?.localizedDescription {
+                self?.viewModel.message.value = errorMsg
+            }else{
+                self?.viewModel.exchangeData.value = rates
+            }
         }
     }
     

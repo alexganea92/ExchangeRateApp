@@ -10,6 +10,10 @@ import Foundation
 @testable import ExchangeRateApp
 
 class DataDummy{
+    
+    /**
+      Provides data sample
+    */
     static var rateStub: [Rate] = {
         var ratesArray: [Rate] = []
         if let path = Bundle.main.path(forResource: "latestRateResponseSample", ofType: "json") {
@@ -24,6 +28,9 @@ class DataDummy{
         return ratesArray
     }()
     
+    /**
+      Provides data interval sample
+    */
     static var rateIntervalStub: [Rate] = {
         var ratesArray: [Rate] = []
         if let path = Bundle.main.path(forResource: "historyRateSample", ofType: "json") {

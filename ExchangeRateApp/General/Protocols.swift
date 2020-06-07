@@ -15,5 +15,9 @@ protocol Updatable {
 protocol ViewModel {
     var isLoading: Observable<Bool> {get set}
     var exchangeData: Observable<[Rate]> {get set}
-    var message: Observable<String> {get set}
+    var message: Observable<String?> {get set}
+}
+
+protocol ViewController {
+    func showMessage(_ string: String)
 }

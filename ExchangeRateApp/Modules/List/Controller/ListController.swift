@@ -33,7 +33,12 @@ class ListController: Updatable {
         viewModel.isLoading.value = true
         exchangeService.fetchRates(symbols: [], interval: 0){ [weak self] (rates, error) in
             self?.viewModel.isLoading.value = false
-            self?.viewModel.exchangeData.value = rates
+            
+            if let errorMsg = error?.localizedDescription {
+                self?.viewModel.message.value = errorMsg
+            }else{
+                self?.viewModel.exchangeData.value = rates
+            }
         } 
     }
 }

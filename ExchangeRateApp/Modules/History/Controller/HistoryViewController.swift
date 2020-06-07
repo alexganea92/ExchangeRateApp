@@ -9,7 +9,7 @@
 import UIKit
 import Charts
 
-class HistoryViewController: UIViewController, ChartViewDelegate {
+class HistoryViewController: UIViewController, ChartViewDelegate, ViewController {
     
     @IBOutlet weak var chartView: LineChartView!
     
@@ -43,9 +43,15 @@ class HistoryViewController: UIViewController, ChartViewDelegate {
     }
     
     func initBinding(){
-        viewModel.exchangeDataArray.addObserver { [weak self] (rates) in
+        viewModel.exchangeData.addObserver { [weak self] (rates) in
             self?.chartView.data = self?.viewModel.processData()
             self?.chartView.leftAxis.axisMaximum = self?.viewModel.roundUp(self?.chartView.data as! LineChartData) ?? 0
         }
+    }
+    
+    func showMessage(_ string: String) {
+        let alert = UIAlertController(title: "Alert", message: string, preferredStyle: .alert)
+        alert.addAction( UIAlertAction(title: "Ok", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 }

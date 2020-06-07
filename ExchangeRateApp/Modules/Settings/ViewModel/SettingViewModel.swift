@@ -16,6 +16,9 @@ class SettingViewModel{
           return SettingController()
       }()
     
+    /**
+      Gets the available interval options
+    */
     lazy var refreshIntervals: [String] = {
         var options: [String] = []
         for value in RefreshRate.allCases{
@@ -25,6 +28,11 @@ class SettingViewModel{
         return options
     }()
     
+    /**
+     Computes the current selectable currency  options
+     - parameters:
+        - exchangeData: Rate Object
+     */
     func setCurrencyNames(exchangeData: Rate){
         currencyOptions.removeAll()
         
@@ -34,6 +42,11 @@ class SettingViewModel{
         }
     }
     
+    /**
+     Computes a refresh interval to be shown
+     - returns:
+     A formatted string
+     */
     func currentRefreshInterval() -> String{
         return String(Default.refreshInterval)+" sec"
     }

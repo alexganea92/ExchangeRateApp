@@ -10,7 +10,24 @@ import Foundation
 import Alamofire
 
 protocol APIServiceProtocol {
+    /**
+     Get formatted data
+     */
     var dataProcess: DataProcess {get set}
+    
+    /**
+     Get currency data
+     
+     - returns:
+     Result of exchange API call
+     
+     - parameters:
+        - symbols: wanted currencies
+        - interval: days past current date
+        - completionBlock:
+        - rates: array of Rate objects
+        - error: network error
+     */
     func fetchRates(symbols: [String], interval: Int, completionBlock: @escaping (_ rates: [Rate], _ error: Error? )->() )
 }
 
@@ -21,28 +38,26 @@ class ApiService: APIServiceProtocol{
     var dataProcess: DataProcess = DataProcess()
     
     func fetchRates(symbols: [String], interval: Int, completionBlock: @escaping (_ rates: [Rate], _ error: Error? )->()) {
-        var request: String
+        var request: String = ApiService.base
         
         if interval == 0 {
-            request = ApiService.base + "/latest" + "?base=" + Default.currencyBase
+            request.append("/latest?base=" + Default.currencyBase)
         }else{
             let beforeDate =  Calendar.current.date(byAdding: .day, value: interval, to: Date())
             let now = Helper.sharedInstance.dateFormatter.string(from: Date())
             let before = Helper.sharedInstance.dateFormatter.string(from: beforeDate!)
-            var url = ApiService.base + "/history?start_at=" + before + "&end_at=" + now
+            request.append("/history?start_at=" + before + "&end_at=" + now)
             
             for (idx, element) in symbols.enumerated() {
                 if idx == symbols.startIndex {
-                    url = url + "&symbols="
+                    request.append("&symbols=")
                 }
                 
-                url = url + element
+                request.append(element)
                 if idx != symbols.endIndex-1 {
-                    url = url + ","
+                    request.append(",")
                 }
             }
-            
-            request = url
         }
         
         AF.request(request).response { response in

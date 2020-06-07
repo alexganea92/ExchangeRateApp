@@ -44,9 +44,8 @@ class HistoryViewController: UIViewController, ChartViewDelegate {
     
     func initBinding(){
         viewModel.exchangeDataArray.addObserver { [weak self] (rates) in
-            self?.viewModel.processData()
-            self?.chartView.leftAxis.axisMaximum = self?.viewModel.max ?? 0
-            self!.chartView.data = self?.viewModel.chartData
+            self?.chartView.data = self?.viewModel.processData()
+            self?.chartView.leftAxis.axisMaximum = self?.viewModel.roundUp(self?.chartView.data as! LineChartData) ?? 0
         }
     }
 }

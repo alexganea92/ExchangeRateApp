@@ -11,11 +11,17 @@ import Charts
 
 class HistoryViewModel{
     let exchangeDataArray = Observable<[Rate]>(value: [])
+    let roundUp: (LineChartData) -> Double = { (chartData) in
+        return chartData.getYMax().rounded(.up)
+    }
     
-    var max: Double = 0
-    var chartData: LineChartData? = nil
-    
-    func processData(){
+    /**
+     Get processed currency data as history
+     
+     - returns:
+     Object to be used as feed data entry for the chart
+     */
+    func processData() -> LineChartData{
         var dictionaryCurrencies = [String:Array<ChartDataEntry>]()
         
         for rate in exchangeDataArray.value {
@@ -26,17 +32,11 @@ class HistoryViewModel{
                 let date = Helper.sharedInstance.dateFormatter.date(from: rate.date)
                 let timeInterval = date?.timeIntervalSince1970
                 
-                if currency.value.doubleValue > max {
-                    max = currency.value.doubleValue
-                }
-                
                 currentHistoryCurrencyArray.append(ChartDataEntry(x: timeInterval!, y: currency.value.doubleValue))
                 
                 dictionaryCurrencies[currency.name] = currentHistoryCurrencyArray
             }
         }
-        
-        max = max.rounded(.up)
         
         var chartSets: [LineChartDataSet] = []
         
@@ -52,7 +52,9 @@ class HistoryViewModel{
             chartSets.append(set)
         }
         
-        chartData = LineChartData(dataSets: chartSets)
-        chartData!.setDrawValues(true)
+        let chartData = LineChartData(dataSets: chartSets)
+        chartData.setDrawValues(true)
+        
+        return chartData
     }
 }

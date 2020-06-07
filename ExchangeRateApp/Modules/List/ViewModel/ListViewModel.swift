@@ -12,22 +12,51 @@ class ListViewModel{
     let isLoading = Observable<Bool>(value: false)
     let exchangeData = Observable<[Rate]>(value: [])
     
-       // MARK: - Data source
-    
+    /**
+     Gets the section number
+     
+     - returns:
+     Section number
+     
+     */
     func numberOfSections() -> Int {
         return exchangeData.value.count
     }
     
+    /**
+     Gets the number of items
+     
+     - returns:
+     The number of items
+     
+     - parameters:
+        - section: requested section
+     */
     func numberOfItems(_ section: Int) -> Int{
         let data = exchangeData.value[section]
         return data.currencyArray.count
     }
     
+    /**
+     Gets the cell's view model
+     
+     - returns:
+     view model object
+     
+     - parameters:
+        - idxP: requested indexPath
+     */
     func objectFor(_ idxP: IndexPath) -> ExchangeInfoModel{
         let data = exchangeData.value[idxP.section]
         return ExchangeInfoModel.init(data.currencyArray[idxP.row])
     }
     
+    /**
+      Gets the title of the rate
+      
+      - returns:
+      A formatted string
+      */
     func title() -> String{
         guard self.exchangeData.value.count > 0 else {
             return ""

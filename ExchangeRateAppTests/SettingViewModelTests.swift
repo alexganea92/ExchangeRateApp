@@ -12,18 +12,16 @@ import XCTest
 class SettingViewModelTests: XCTestCase {
     
     var sut: SettingViewModel!
-       var controller: SettingController!
        var mockAPIService: MockApiService!
 
      override func setUp() {
          mockAPIService = MockApiService()
-         controller = SettingController.init(exchangeService: mockAPIService)
-         sut = controller.viewModel
+         sut = SettingViewModel()
      }
      
      override func tearDown() {
          mockAPIService = nil
-         controller = nil
+         sut = nil
      }
 
     func test_currencies_options() {
